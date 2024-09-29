@@ -5,7 +5,15 @@ const ProductModel = require("../models/productModel");
  * @route POST /api/v1/products
  */
 exports.getProducts = async (req, res, next) => {
-  const products = await ProductModel.find({});
+  let query = req.query.keyword
+    ? {
+        name: {
+          $regex: req.query.keyword,
+          $options: "i",
+        },
+      }
+    : {};
+  const products = await ProductModel.find(query);
   res.json({
     success: true,
     products,
