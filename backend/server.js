@@ -11,13 +11,14 @@ dotenv.config({
 const app = express();
 const products = require("./routes/product");
 const orders = require("./routes/order");
-
+const cors = require("cors");
 // Connect to Database
 connectDatabase();
 
 
 // Middleware
 app.use(express.json());
+app.use(cors());
 
 // Routes
 app.use("/api/v1/", products);
