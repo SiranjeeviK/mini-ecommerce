@@ -5,7 +5,7 @@ const connectDatabase = require("./config/connectDatabase");
 
 // Environment Variables Configuration
 dotenv.config({
-  path: path.join(__dirname, "config", "config.env"),
+  path: path.join(__dirname, ".env"),
 });
 
 const app = express();
