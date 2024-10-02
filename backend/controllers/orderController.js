@@ -1,4 +1,5 @@
 const orderModel = require("../models/orderModel");
+const productModel = require("../models/productModel");
 
 /**
  * @desc Create a new order
@@ -18,6 +19,13 @@ exports.createOrder = async (req, res, next) => {
     status,
     createdAt: Date.now(),
   });
+
+  // Updating the stock
+  for (const item of cartItems) {
+    const product = await productModel.findById(item.product._id);
+    product.stock = product.stock - item.qty;
+    await product.save();
+  }
 
   // console.log(order);
 
