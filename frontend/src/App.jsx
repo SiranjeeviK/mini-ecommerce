@@ -13,7 +13,7 @@ function App() {
   return (
     <CartContextProvider>
       <BrowserRouter>
-        <ToastContainer />
+        <ToastContainer position="bottom-right"/>
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />

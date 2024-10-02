@@ -26,7 +26,6 @@ function ProductDetails() {
     if (!itemExist) {
       setCartItems((oldItems) => {
         const updatedCartItems = [...oldItems, newItem];
-        console.log("Cart Items: ", updatedCartItems);
         return updatedCartItems;
       });
       toast.success("Item added to cart");
