@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useCartContext } from "../context/CartContext";
+import { toast } from "react-toastify";
 
 function ProductDetails() {
   const { productId } = useParams();
@@ -21,14 +22,29 @@ function ProductDetails() {
 
   const addToCart = () => {
     const itemExist = cartItems.find((item) => item.product._id === productId);
-    // Structure of the cart item = {product, quantity}
-    const newItem = { product, quantity: qty };
+    const newItem = { product, qty };
     if (!itemExist) {
       setCartItems((oldItems) => {
-        return [...oldItems, newItem];
+        const updatedCartItems = [...oldItems, newItem];
+        console.log("Cart Items: ", updatedCartItems);
+        return updatedCartItems;
       });
+      toast.success("Item added to cart");
+    } else {
+      toast.error("Item already in cart");
     }
-    console.log("Cart Items: ", cartItems);
+  };
+
+  const increaseQty = () => {
+    if (qty == product.stock) return;
+
+    setQty((prevQty) => prevQty + 1);
+  };
+
+  const decreaseQty = () => {
+    if (qty > 1) {
+      setQty((prevQty) => prevQty - 1);
+    }
   };
 
   return (
@@ -61,22 +77,27 @@ function ProductDetails() {
 
             <p id="product_price">${product.price}</p>
             <div className="stockCounter d-inline">
-              <span className="btn btn-danger minus">-</span>
+              <span className="btn btn-danger minus" onClick={decreaseQty}>
+                -
+              </span>
 
               <input
-                type="number"
+                type="text"
                 className="form-control count d-inline"
                 value={qty}
                 readOnly
               />
 
-              <span className="btn btn-primary plus">+</span>
+              <span className="btn btn-primary plus" onClick={increaseQty}>
+                +
+              </span>
             </div>
             <button
               type="button"
               id="cart_btn"
               className="btn btn-primary d-inline ml-4"
               onClick={addToCart}
+              disabled={product.stock === 0}
             >
               Add to Cart
             </button>
