@@ -1,22 +1,35 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { useCartContext } from "../context/CartContext";
 
 function ProductDetails() {
   const { productId } = useParams();
-  // console.log(productId);
+  const { cartItems, setCartItems } = useCartContext();
 
   const [product, setProduct] = useState(null);
+  const [qty, setQty] = useState(1);
 
   useEffect(() => {
     fetch(import.meta.env.APP_API_URL + `/product/${productId}`)
       .then((res) => res.json())
       .then((data) =>
         setProduct((oldData) => {
-          console.log(data, "DETAILS");
           return data.product;
         })
       );
   }, []);
+
+  const addToCart = () => {
+    const itemExist = cartItems.find((item) => item.product._id === productId);
+    // Structure of the cart item = {product, quantity}
+    const newItem = { product, quantity: qty };
+    if (!itemExist) {
+      setCartItems((oldItems) => {
+        return [...oldItems, newItem];
+      });
+    }
+    console.log("Cart Items: ", cartItems);
+  };
 
   return (
     product && (
@@ -53,7 +66,7 @@ function ProductDetails() {
               <input
                 type="number"
                 className="form-control count d-inline"
-                value="1"
+                value={qty}
                 readOnly
               />
 
@@ -63,6 +76,7 @@ function ProductDetails() {
               type="button"
               id="cart_btn"
               className="btn btn-primary d-inline ml-4"
+              onClick={addToCart}
             >
               Add to Cart
             </button>
